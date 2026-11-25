@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Live Events & Countdowns | TechBoltX</title>
+    <style>
+        :root { color-scheme: dark; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #0b0f19; color: #f8fafc; margin: 0; padding: 20px; }
+        .roblox-wrapper { max-width: 900px; margin: 0 auto; }
+        h2 { font-size: 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        
+        /* Card Styling matching your layout */
+        .hub-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); }
+        .hub-card:hover { transform: translateY(-2px); border-color: #38bdf8; }
+        .hub-card.live { border-color: #ef4444; }
+        
+        .hub-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .hub-avatar { width: 48px; height: 48px; border-radius: 8px; background: #334155; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; color: #fff; flex-shrink: 0; }
+        .hub-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .hub-title .hub-game { font-weight: 700; font-size: 15px; color: #f8fafc; line-height: 1.2; }
+        .hub-title .hub-event { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+        
+        .hub-status { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .live-status { color: #ef4444; }
+        .upcoming-status { color: #38bdf8; }
+        
+        .hub-timer { font-size: 13px; font-weight: 600; color: #facc15; background: #0f172a; padding: 8px 12px; border-radius: 6px; text-align: center; }
+        
+        .footer-credit { text-align: center; margin-top: 40px; font-size: 13px; color: #64748b; border-top: 1px solid #1e293b; padding-top: 16px; }
+        .footer-credit a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+        .footer-credit a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="roblox-wrapper">
+        <h2>🔴 Live Now</h2>
+        <div id="live-grid" class="hub-grid">
+            <p style="color:#64748b;">Loading live events...</p>
+        </div>
+
+        <h2>Upcoming Events</h2>
+        <div id="upcoming-grid" class="hub-grid">
+            <p style="color:#64748b;">Loading upcoming events...</p>
+        </div>
+
+        <div class="footer-credit">
+            Powered by TechBoltX · <a href="https://techboltx.com/roblox-game-event-time/" target="_blank">View all Roblox event timers</a>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to format seconds into countdown text
+        function formatCountdown(targetTimestamp) {
+            const now = Math.floor(Date.now() / 1000);
+            const diff = targetTimestamp - now;
+            if (diff <= 0) return "Starting now";
+            
+            const hours = Math.floor(diff / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            
+            if (hours >= 24) {
+                const days = Math.floor(hours / 24);
+                return `Starts in ${days}d ${hours % 24}h`;
+            }
+            if (hours > 0) {
+                return `Event ends in ${hours}h ${minutes}m`;
+            }
+            return `Starts in ${minutes}m`;
+        }
+
+        async function loadRobloxWidgets() {
+            try {
+                // Replace this URL with your custom JSON endpoint or a REST route on your WordPress site
+                const response = await fetch('https://techboltx.com/wp-json/techboltx/v1/roblox-events'); 
+                const data = await response.json();
+
+                const liveGrid = document.getElementById('live-grid');
+                const upcomingGrid = document.getElementById('upcoming-grid');
+                
+                liveGrid.innerHTML = '';
+                upcomingGrid.innerHTML = '';
+
+                // Example rendering loop matching your PHP card structure
+                // Assuming your endpoint returns parsed cards or raw items:
+                // ...
+            } catch (error) {
+                // Fallback demo state if endpoint is initializing
+                document.getElementById('live-grid').innerHTML = `
+                    <a class="hub-card live" href="https://techboltx.com/game/fisch/">
+                        <div class="hub-header">
+                            <div class="hub-avatar" style="background:#2563eb;">F</div>
+                            <div class="hub-title">
+                                <div class="hub-game">Fisch</div>
+                                <div class="hub-event">Winter Holiday Update</div>
+                            </div>
+                        </div>
+                        <div class="hub-status live-status">LIVE NOW</div>
+                        <div class="hub-timer">Event ends in 2h 15m</div>
+                    </a>
+                `;
+
+                document.getElementById('upcoming-grid').innerHTML = `
+                    <a class="hub-card" href="https://techboltx.com/game/blox-fruits/">
+                        <div class="hub-header">
+                            <div class="hub-avatar" style="background:#dc2626;">B</div>
+                            <div class="hub-title">
+                                <div class="hub-game">Blox Fruits</div>
+                                <div class="hub-event">Update 25 Release</div>
+                            </div>
+                        </div>
+                        <div class="hub-status upcoming-status">UPCOMING</div>
+                        <div class="hub-timer">Starts in 45m</div>
+                    </a>
+                `;
+            }
+        }
+
+        loadRobloxWidgets();
+    </script>
+</body>
+</html>
